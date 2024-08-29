@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 
 // rrd imports
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 const toggleMode = () => {
   return localStorage.getItem("darkMode") || "light";
