@@ -17,7 +17,9 @@ const Quiz = () => {
     data: quizzes,
     isPending,
     error,
-  } = useFetch(`http://localhost:3000/quizzes?title=${title}`);
+  } = useFetch(`https://json-api.uz/api/project/azimjon-frontend-quizz/quizzes?title=${title}`);
+
+  console.log(quizzes);
 
   useEffect(() => {
     document.title = "Quiz" + " " + title;
@@ -26,7 +28,7 @@ const Quiz = () => {
     <section className='container'>
       {isPending && <h3>Loading...</h3>}
       {error && <h3>{error}</h3>}
-      {quizzes && <Test questions={quizzes[0]} />}
+      {quizzes && <Test questions={quizzes.data[0]} />}
     </section>
   );
 };

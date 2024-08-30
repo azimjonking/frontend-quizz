@@ -10,7 +10,7 @@ function MenuLinks() {
     isPending,
     error,
   } = useFetch(
-    "http://localhost:3000/quizzes"
+    "https://json-api.uz/api/project/azimjon-frontend-quizz/quizzes"
   );
 
   return (
@@ -20,7 +20,7 @@ function MenuLinks() {
 
       <div className="menu-list">
         {quizzes &&
-          quizzes.map((item) => {
+          quizzes.data.map((item) => {
             return (
               <Link
                 to={`/quiz/${item.title}`}
