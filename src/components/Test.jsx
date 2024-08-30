@@ -1,6 +1,12 @@
 // import react
 import { useState } from "react";
 
+// components
+import Result from "./Result";
+
+// toast
+import toast from "react-hot-toast";
+
 const Test = ({ questions: { color, icon, questions, title } }) => {
   const [asnweredQuestions, setAsnweredQuestions] = useState(1);
   const [correctAnswerCount, setCorrectAnswerCount] = useState(0);
@@ -15,10 +21,45 @@ const Test = ({ questions: { color, icon, questions, title } }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const correctAnswer = questions[questionIndex].answer
+    const correctAnswer = questions[questionIndex].answer;
+
+    if (selectedAnswer == null) {
+      toast.error("Please, select an answer");
+    } else {
+      if (selectedAnswer == correctAnswer) {
+        setAnswerStatus("correct");
+        setCorrectAnswerCount(correctAnswerCount + 1);
+      } else {
+        setAnswerStatus("incorrect");
+      }
+      setShowNextButton(true);
+      setStatusDisabled(true);
+    }
   };
 
-  const handleNextQuestion = () => {};
+  const handleNextQuestion = () => {
+    setQuestionIndex(questionIndex + 1);
+    setAsnweredQuestions(asnweredQuestions + 1);
+    setSelectedAnswer(null);
+    setShowNextButton(false);
+    setAnswerStatus(null);
+    setStatusDisabled(false);
+  };
+
+  if (questionIndex === questions.length) {
+    toast.success("Congratulations", {
+      icon: "🎉",
+    });
+    return (
+      <Result
+        title={title}
+        color={color}
+        icon={icon}
+        correctAnswerCount={correctAnswerCount}
+        questions={questions}
+      />
+    );
+  }
 
   return (
     <div className="test-container">
@@ -41,14 +82,30 @@ const Test = ({ questions: { color, icon, questions, title } }) => {
         <form onSubmit={handleSubmit}>
           <ul className="test-list">
             {questions[questionIndex].options.map((option, index) => {
+              const alphabet = String.fromCharCode(65 + index);
+
+              let className = "";
+
+              if (answerStatus == "correct" && option == selectedAnswer) {
+                className = "correct";
+              } else if (answerStatus == "incorrect") {
+                if (option == selectedAnswer) {
+                  className = "incorrect";
+                }
+
+                if (option == questions[questionIndex].answer) {
+                  className = "correct";
+                }
+              }
               return (
                 <li key={option}>
-                  <label className="test-label">
-                    <span className="test-letter">A</span>
+                  <label className={`test-label ${className}`}>
+                    <span className="test-letter">{alphabet}</span>
                     <input
                       type="radio"
                       name="option"
                       onChange={() => setSelectedAnswer(option)}
+                      disabled={statusDisabled}
                     />
                     <span className="test-text">{option}</span>
 
@@ -76,7 +133,7 @@ const Test = ({ questions: { color, icon, questions, title } }) => {
             <button className="btn test-btn">Submit Question</button>
           )}
           {showNextButton && (
-            <button className="btn test-btn">
+            <button className="btn test-btn" onClick={handleNextQuestion}>
               {questions.length == asnweredQuestions
                 ? "Finish"
                 : "Next Question"}

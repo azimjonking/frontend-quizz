@@ -6,6 +6,8 @@ import { useFetch } from "../hooks/useFetch";
 
 // react hooks
 import { useEffect } from "react";
+
+// components
 import Test from "../components/Test";
 
 const Quiz = () => {
